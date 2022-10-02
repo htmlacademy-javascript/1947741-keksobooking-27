@@ -30,7 +30,7 @@ function getRandomIntFloatingPoint (min, max, characterLimit) {
   }
 
   const calculation = Math.random() * (max - min + 1) + min;
-  const result = Number(calculation.toFixed(characterLimit));
+  const result = calculation.toFixed(characterLimit);
   return result;
 }
 
