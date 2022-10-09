@@ -59,7 +59,7 @@ const PHOTOS = [
 //Напишем функции
 
 //Функция, возвращающая случайное целое число из переданного диапазона включительно
-const getRandomIntInclusive = function (min, max) {
+const getRandomIntInclusive = (min, max) => {
   if (min < 0 || max < 0 || max < min) {
     return NaN;
   }
@@ -69,25 +69,24 @@ const getRandomIntInclusive = function (min, max) {
 };
 
 //Функция, возвращающая случайное число с плавающей точкой из переданного диапазона включительно.
-const getRandomIntFloatingPoint = function (min, max, characterLimit) {
+const getRandomIntFloatingPoint = (min, max, characterLimit) => {
   if (min < 0 || max < 0 || max < min || characterLimit < 0) {
     return NaN;
   }
 
-  const calculation = Math.random() * (max - min) + min;
-  const result = calculation.toFixed(characterLimit);
+  const result = (Math.random() * (max - min) + min).toFixed(characterLimit);
   return result;
 };
 
 //Функция возвращает случайное значение из массива
-const getRandomElement = function (element) {
+const getRandomElement = (element) => {
   const randomElement = Math.floor(Math.random() * element.length);
   return element[randomElement];
 };
 
 //Функция для генерации адресов изображений(неповторяющихся)
-const getUniqueImageAddress = function () {
-  let number = 0;
+let number = 0;
+const getUniqueImageAddress = () => {
   for (let i = 1; i <= COUNTER_ADS; i++) {
     number += 1;
     if (number < 10) {
@@ -98,7 +97,7 @@ const getUniqueImageAddress = function () {
 };
 
 //Функция для вывода массива случайной длины из случайных неповторяющихся значений
-const getRandomArray = function (features) {
+const getRandomArray = (features) => {
   const maxLengthArray = features.length;
   const lengthOfArray = getRandomIntInclusive(1, maxLengthArray);
   const randomArray = [];
@@ -115,7 +114,7 @@ const getRandomArray = function (features) {
 };
 
 //Функция создает одно объявление
-const getCreatedAd = function () {
+const getCreatedAd = () => {
   const xCoordinate = getRandomIntFloatingPoint (LAT_MIN, LAT_MAX, 5);
   const yCoordinate = getRandomIntFloatingPoint(LNG_MIN, LNG_MAX, 5);
   return {
