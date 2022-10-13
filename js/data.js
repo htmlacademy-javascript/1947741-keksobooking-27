@@ -1,5 +1,3 @@
-import {getRandomIntInclusive, getRandomIntFloatingPoint, getRandomElement, getRandomArray} from './util.js';
-
 //Записываем в константу число, равное количеству сгенерированных объектов
 const COUNTER_ADS = 10;
 
@@ -58,47 +56,4 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
 ];
 
-//Функция для генерации адресов изображений(неповторяющихся)
-let number = 0;
-const getUniqueImageAddress = () => {
-  for (let i = 1; i <= COUNTER_ADS; i++) {
-    number += 1;
-    if (number < 10) {
-      return `img/avatars/user0${number}.png`;
-    }
-    return `img/avatars/user${number}.png`;
-  }
-};
-
-//Функция создает одно объявление
-const getCreatedAd = () => {
-  const xCoordinate = getRandomIntFloatingPoint (LAT_MIN, LAT_MAX, 5);
-  const yCoordinate = getRandomIntFloatingPoint(LNG_MIN, LNG_MAX, 5);
-  return {
-    author: {
-      avatar: getUniqueImageAddress(),
-    },
-    offer: {
-      title: getRandomElement(TITLES),
-      address: `${xCoordinate}, ${yCoordinate}`,
-      price: getRandomIntInclusive(0, 100000),
-      type: getRandomElement(TYPES),
-      rooms: getRandomIntInclusive(1, 10),
-      guests: getRandomIntInclusive(1, 10),
-      checkin: getRandomElement(CHECK_TIMES),
-      checkout: getRandomElement(CHECK_TIMES),
-      features: getRandomArray(FEATURES),
-      description: getRandomElement(DESCRIPTIONS),
-      photos: getRandomArray(PHOTOS)
-    },
-    location: {
-      lat: xCoordinate,
-      lng: yCoordinate
-    }
-  };
-};
-
-//Функция создает 10 случайных объявлений
-const getCreatedAds = () => Array.from({length: COUNTER_ADS}, getCreatedAd);
-
-export {getCreatedAds};
+export {COUNTER_ADS, LAT_MIN, LAT_MAX, LNG_MIN, LNG_MAX, TITLES, TYPES, CHECK_TIMES, FEATURES, DESCRIPTIONS, PHOTOS};

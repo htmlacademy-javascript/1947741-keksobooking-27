@@ -1,3 +1,3 @@
-import {getCreatedAds} from './data.js';
+import {getCreatedAds} from './util.js';
 
-getCreatedAds();
+console.log(getCreatedAds());
