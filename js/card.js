@@ -23,7 +23,7 @@ const card = cardTemplate.querySelector('.popup');
 //в переменную записывем вывод функции getCreateAds
 const similarAds = getCreatedAds();
 
-similarAds.forEach((author, offer) => {
+similarAds.forEach(({author, offer}) => {
   const cardElement = card.cloneNode(true);
   cardElement.querySelector('.popup__avatar').src = author.avatar;
   cardElement.querySelector('.popup__title').textContent = offer.title;
@@ -34,7 +34,7 @@ similarAds.forEach((author, offer) => {
   cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
 
   const featuresList = cardElement.querySelector('.popup__features');
-  const featuresItems = featuresList.querySelector('.popup__feature');
+  const featuresItems = featuresList.querySelectorAll('.popup__feature');
   if (offer.features) {
     featuresItems.forEach((featuresItem) => {
       const isNecessary = offer.features.some((feature) => featuresItem.classList.contains(`popup__feature--${feature}`));
@@ -42,6 +42,7 @@ similarAds.forEach((author, offer) => {
       if (!isNecessary) {
         featuresItem.remove();
       }
+
     });
   } else {
     featuresList.remove();
@@ -61,6 +62,7 @@ similarAds.forEach((author, offer) => {
       photoElement.src = photo;
       photosList.appendChild(photoElement);
     });
+    photosItems.remove();
   } else {
     photosList.remove();
   }
