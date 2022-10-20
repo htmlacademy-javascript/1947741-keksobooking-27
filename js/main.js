@@ -1,3 +1,1 @@
-import {getCreatedAds} from './util.js';
-
-getCreatedAds();
+import './card.js';
