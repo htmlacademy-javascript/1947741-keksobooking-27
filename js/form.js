@@ -39,4 +39,6 @@ const activePage = () => {
 
 activePage();
 
-export {disabledPage, activePage};
+export {adForm,
+  disabledPage,
+  activePage};
