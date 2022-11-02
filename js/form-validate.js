@@ -36,6 +36,7 @@ const getPriceErrorMessage = () => {
     return `Укажите цену ниже максимально возможной цены - ${maxPrice} рублей`;
   }
 };
+price.placeholder = minPriceOfHousing[typeOfHousing.value];
 
 pristine.addValidator(price, validatePrice, getPriceErrorMessage);
 
@@ -63,3 +64,25 @@ function onRoomNumberChange() {
 
 roomNumber.addEventListener('change', onCapacityChange);
 capacity.addEventListener('change', onRoomNumberChange);
+
+//Валидация полей времени заезда и времени выезда
+const timeIn = adForm.querySelector('#timein');
+const timeOut = adForm.querySelector('#timeout');
+
+const onTimeInChange = () => {
+  timeOut.value = timeIn.value;
+};
+
+const onTimeOutChange = () => {
+  timeIn.value = timeOut.value;
+};
+
+timeIn.addEventListener('change', onTimeInChange);
+
+timeOut.addEventListener('change', onTimeOutChange);
+
+//Валидация формы при отправке
+adForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  pristine.validate();
+});
