@@ -36,6 +36,7 @@ const getPriceErrorMessage = () => {
     return `Укажите цену ниже максимально возможной цены - ${maxPrice} рублей`;
   }
 };
+price.placeholder = minPriceOfHousing[typeOfHousing.value];
 
 pristine.addValidator(price, validatePrice, getPriceErrorMessage);
 
