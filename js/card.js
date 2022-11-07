@@ -18,6 +18,6 @@ export const renderAds = (list) => {
 };
 
 //в переменную записывем вывод функции getCreateAds
-const similarAds = getCreatedAds();
+export const similarAds = getCreatedAds();
 
 renderAds(similarAds);

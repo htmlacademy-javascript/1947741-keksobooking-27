@@ -1,10 +1,17 @@
 import {activePage} from './form.js';
+import { adForm } from './form.js';
+import {address} from './form-validate.js';
+import { similarAds } from './card.js';
+import { createCardTemplate } from './create-card.js';
+
+const buttonSubmit = adForm.querySelector('.ad-form__submit');
+const buttonReset = adForm.querySelector('.ad-form__reset');
 
 const CENTER_COORDINATES = {
-  lat: 35.689,
-  lng: 139.692,
+  lat: 35.68950,
+  lng: 139.69171,
 };
-const mapScale = 15;
+const mapScale = 12;
 
 //Создаем карту с координатами
 const map = L.map('map-canvas')
@@ -28,16 +35,58 @@ const mainPinIcon = L.icon({
   iconAnchor: [26, 52],
 });
 
+const pinIcon = L.icon({
+  iconUrl: './img/pin.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
+
 const mainPinMarker = L.marker(
   CENTER_COORDINATES,
   {
     draggable: true,
     icon: mainPinIcon,
   },
+  address.value = `${CENTER_COORDINATES.lat} ${CENTER_COORDINATES.lng}`
 );
 
 mainPinMarker.addTo(map);
 
-// mainPinMarker.on('moveend', (evt) => {
-//   console.log(evt.target.getLatLng());
-// });
+mainPinMarker.on('moveend', (evt) => {
+  const newCoordinates = evt.target.getLatLng();
+  address.value = `${newCoordinates.lat.toFixed(5)} ${newCoordinates.lng.toFixed(5)}`;
+});
+
+
+//Возвращает начальные координаты маркера при сбросе введенных данных и отправке формы
+
+const getInitialCoordinates = () => {
+  mainPinMarker.setLatLng(CENTER_COORDINATES);
+  map.setView(CENTER_COORDINATES, mapScale);
+  address.value = `${CENTER_COORDINATES.lat} ${CENTER_COORDINATES.lng}`;
+};
+
+buttonSubmit.addEventListener('click', getInitialCoordinates);
+
+buttonReset.addEventListener('click', getInitialCoordinates);
+
+//Добавление меток объявлений на карту
+const createMarker = (similarAd) => {
+  const marker = L.marker(
+    {
+      lat: similarAd.location.lat,
+      lng: similarAd.location.lng,
+    },
+    {
+      pinIcon,
+    }
+  );
+
+  marker
+    .addTo(map)
+    .bindPopup(createCardTemplate(similarAd));
+};
+
+similarAds.forEach((similarAd) => {
+  createMarker(similarAd);
+});

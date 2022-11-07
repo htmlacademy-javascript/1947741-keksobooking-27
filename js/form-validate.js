@@ -81,6 +81,9 @@ timeIn.addEventListener('change', onTimeInChange);
 
 timeOut.addEventListener('change', onTimeOutChange);
 
+//Поле адреса
+export const address = adForm.querySelector('#address');
+
 //Валидация формы при отправке
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
