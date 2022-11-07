@@ -17,10 +17,10 @@ const validateTitle = (value) => value.length >= minLengthTitle && value.length 
 pristine.addValidator(title, validateTitle, `От ${minLengthTitle}  до ${maxLengthTitle} символов`);
 
 //Валидация поля цены за ночь
-const price = adForm.querySelector('#price');
+export const price = adForm.querySelector('#price');
 const maxPrice = 100000;
-const typeOfHousing = adForm.querySelector('#type');
-const minPriceOfHousing = {
+export const typeOfHousing = adForm.querySelector('#type');
+export const minPriceOfHousing = {
   bungalow: 0,
   flat: 1000,
   hotel: 3000,
