@@ -2,7 +2,7 @@ import { price } from './form-validate.js';
 import { typeOfHousing, minPriceOfHousing } from './form-validate.js';
 
 //global noUiSlider:readonly
-const sliderElement = document.querySelector('.ad-form__slider');
+export const sliderElement = document.querySelector('.ad-form__slider');
 
 noUiSlider.create(sliderElement, {
   range: {

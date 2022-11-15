@@ -60,7 +60,7 @@ mainPinMarker.on('moveend', (evt) => {
 
 //Возвращает начальные координаты маркера при сбросе введенных данных и отправке формы
 
-const getInitialCoordinates = () => {
+export const getInitialCoordinates = () => {
   mainPinMarker.setLatLng(CENTER_COORDINATES);
   map.setView(CENTER_COORDINATES, mapScale);
   address.value = `${CENTER_COORDINATES.lat} ${CENTER_COORDINATES.lng}`;

@@ -1,11 +1,11 @@
-const adForm = document.querySelector('.ad-form');
-const elementsAdForm = adForm.querySelectorAll('fieldset');
+export const adForm = document.querySelector('.ad-form');
+export const elementsAdForm = adForm.querySelectorAll('fieldset');
 
 const mapFilters = document.querySelector('.map__filters');
 const mapFiltersSelects = mapFilters.querySelectorAll('select');
 const mapFiltersFieldsets = mapFilters.querySelector('fieldset');
 
-const disabledPage = () => {
+export const disabledPage = () => {
   adForm.classList.add('ad-form--disabled');
   mapFilters.classList.add('map__filters--disabled');
 
@@ -22,7 +22,7 @@ const disabledPage = () => {
 
 disabledPage();
 
-const activePage = () => {
+export const activePage = () => {
   adForm.classList.remove('ad-form--disabled');
   mapFilters.classList.remove('map__filters--disabled');
 
@@ -38,7 +38,3 @@ const activePage = () => {
 };
 
 activePage();
-
-export {adForm,
-  disabledPage,
-  activePage};
