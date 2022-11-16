@@ -1,4 +1,7 @@
+import { sendData } from './api.js';
 import {adForm} from './form.js';
+import { isEscapeKey } from './util.js';
+// import { sliderElement } from './slider.js';
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element', // Элемент, на который будут добавляться классы
@@ -84,8 +87,79 @@ timeOut.addEventListener('change', onTimeOutChange);
 //Поле адреса
 export const address = adForm.querySelector('#address');
 
+//Сброс формы и показ сообщений
+
+const successTemplate = document.querySelector('#success')
+  .content.querySelector('.success');
+
+const errorTemplate = document.querySelector('#error')
+  .content.querySelector('.error');
+
+const successMessage = successTemplate.cloneNode(true);
+successMessage.classList.add('hidden');
+document.body.append(successMessage);
+
+const errorMessage = errorTemplate.cloneNode(true);
+errorMessage.classList.add('hidden');
+document.body.append(errorMessage);
+
+const closeSuccessModal = () => {
+  successMessage.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscKeydown);
+};
+
+const closeErrorModal = () => {
+  errorMessage.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscKeydown);
+};
+
+function onPopupEscKeydown (evt) {
+  if (isEscapeKey(evt)) {
+    closeErrorModal();
+    closeSuccessModal();
+  }
+}
+
+const onErrorMessageOpen = (message) => {
+  const errorButton = message.querySelector('.error__button');
+  errorButton.addEventListener('click', closeErrorModal);
+};
+
+const showSuccessMessage = () => {
+  errorMessage.classList.remove('hidden');
+  onErrorMessageOpen(errorMessage);
+  document.addEventListener('keydown', onPopupEscKeydown);
+  errorMessage.addEventListener('click', closeErrorModal);
+};
+
+const showErrorMessage = () => {
+  successMessage.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscKeydown);
+  successMessage.addEventListener('click', closeSuccessModal);
+};
+
+const resetForm = () => {
+  adForm.reset();
+
+  //сбросить позицию балуна
+
+  //сбросить слайдер
+  // sliderElement.noUiSlider.set(price.value);
+};
+
 //Валидация формы при отправке
-adForm.addEventListener('submit', (evt) => {
+adForm.addEventListener('submit', async (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    const formData = new FormData (evt.target);
+    const result = await sendData(formData);
+    if (result) {
+      showSuccessMessage();
+      resetForm();
+    } else {
+      showErrorMessage();
+    }
+  }
 });

@@ -1,5 +1,4 @@
 import { price } from './form-validate.js';
-import { typeOfHousing, minPriceOfHousing } from './form-validate.js';
 
 //global noUiSlider:readonly
 export const sliderElement = document.querySelector('.ad-form__slider');
@@ -9,7 +8,7 @@ noUiSlider.create(sliderElement, {
     min: 0,
     max: 100000,
   },
-  start: minPriceOfHousing[typeOfHousing.value],
+  start: price.placeholder,
   step: 10,
   connect: 'lower',
   format: {
