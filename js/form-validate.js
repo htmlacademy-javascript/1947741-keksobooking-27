@@ -2,6 +2,7 @@ import { sendData } from './api.js';
 import {adForm} from './form.js';
 import { isEscapeKey } from './util.js';
 // import { sliderElement } from './slider.js';
+import { buttonReset } from './map.js';
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element', // Элемент, на который будут добавляться классы
@@ -87,67 +88,60 @@ timeOut.addEventListener('change', onTimeOutChange);
 //Поле адреса
 export const address = adForm.querySelector('#address');
 
-//Сброс формы и показ сообщений
-
-const successTemplate = document.querySelector('#success')
-  .content.querySelector('.success');
-
-const errorTemplate = document.querySelector('#error')
-  .content.querySelector('.error');
-
-const successMessage = successTemplate.cloneNode(true);
-successMessage.classList.add('hidden');
-document.body.append(successMessage);
-
+const successTemlate = document.querySelector('#success').content.querySelector('.success');
+const successMessage = successTemlate.cloneNode(true);
+const body = document.querySelector('body');
+const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorMessage = errorTemplate.cloneNode(true);
-errorMessage.classList.add('hidden');
-document.body.append(errorMessage);
 
-const closeSuccessModal = () => {
-  successMessage.classList.add('hidden');
-  document.removeEventListener('keydown', onPopupEscKeydown);
-};
 
-const closeErrorModal = () => {
-  errorMessage.classList.add('hidden');
-  document.removeEventListener('keydown', onPopupEscKeydown);
-};
-
-function onPopupEscKeydown (evt) {
-  if (isEscapeKey(evt)) {
-    closeErrorModal();
-    closeSuccessModal();
-  }
-}
-
-const onErrorMessageOpen = (message) => {
-  const errorButton = message.querySelector('.error__button');
-  errorButton.addEventListener('click', closeErrorModal);
-};
-
-const showSuccessMessage = () => {
-  errorMessage.classList.remove('hidden');
-  onErrorMessageOpen(errorMessage);
-  document.addEventListener('keydown', onPopupEscKeydown);
-  errorMessage.addEventListener('click', closeErrorModal);
-};
-
-const showErrorMessage = () => {
-  successMessage.classList.remove('hidden');
-  document.addEventListener('keydown', onPopupEscKeydown);
-  successMessage.addEventListener('click', closeSuccessModal);
-};
-
-const resetForm = () => {
+buttonReset.addEventListener('click', (evt) => {
+  evt.preventDefault();
   adForm.reset();
+  // resetMap();
+  // resetSlider();
+});
 
-  //сбросить позицию балуна
+const onSuccessMessageClick = () => {
+  successMessage.remove();
 
-  //сбросить слайдер
-  // sliderElement.noUiSlider.set(price.value);
+  document.removeEventListener('click', onSuccessMessageClick);
 };
 
-//Валидация формы при отправке
+const onSuccessMessageKeydown = () => {
+  if (isEscapeKey) {successMessage.remove();}
+
+  document.removeEventListener('keydown', onSuccessMessageKeydown);
+};
+
+const sendFormSuccess = () => {
+  body.appendChild(successMessage);
+  document.addEventListener('click', onSuccessMessageClick);
+  document.addEventListener('keydown', onSuccessMessageKeydown);
+  adForm.reset();
+  // resetMap();
+  // resetSlider();
+};
+
+const onErrorMessageClick = () => {
+  errorMessage.remove();
+
+  document.removeEventListener('click', onErrorMessageClick);
+};
+
+const onErrorMessageKeydown = () => {
+  if (isEscapeKey) {errorMessage.remove();}
+
+  document.removeEventListener('keydown', onErrorMessageKeydown);
+};
+
+const sendFormError = () => {
+  body.appendChild(errorMessage);
+  document.addEventListener('click', onErrorMessageClick);
+  document.addEventListener('keydown', onErrorMessageKeydown);
+};
+
+
 adForm.addEventListener('submit', async (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
@@ -156,10 +150,9 @@ adForm.addEventListener('submit', async (evt) => {
     const formData = new FormData (evt.target);
     const result = await sendData(formData);
     if (result) {
-      showSuccessMessage();
-      resetForm();
+      sendFormSuccess();
     } else {
-      showErrorMessage();
+      sendFormError();
     }
   }
 });

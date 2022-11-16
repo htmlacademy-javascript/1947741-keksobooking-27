@@ -3,10 +3,10 @@ import { adForm } from './form.js';
 import {address} from './form-validate.js';
 import { createCardTemplate } from './create-card.js';
 
-export const createMap = () => {
+const buttonSubmit = adForm.querySelector('.ad-form__submit');
+export const buttonReset = adForm.querySelector('.ad-form__reset');
 
-  const buttonSubmit = adForm.querySelector('.ad-form__submit');
-  const buttonReset = adForm.querySelector('.ad-form__reset');
+export const createMap = () => {
 
   const CENTER_COORDINATES = {
     lat: 35.68950,
