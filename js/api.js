@@ -20,12 +20,14 @@ export const sendData = async (body) => {
         body: body,
       },
     );
-    if (!response.ok) {
+
+    if (response.ok) {
+      const result = await response.json();
+      return result;
+    } else {
       return false;
     }
 
-    const result = await response.json();
-    return result;
   } catch(error) {
     return false;
   }

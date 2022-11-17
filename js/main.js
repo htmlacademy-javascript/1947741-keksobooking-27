@@ -1,8 +1,5 @@
-// import './card.js';
 import './form.js';
 import './form-validate.js';
-// import './map.js';
-import './slider.js';
 import { getData } from './api.js';
 import { renderAds } from './card.js';
 import {createMarkers} from './map.js';
