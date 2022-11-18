@@ -1,4 +1,7 @@
+import { sendData } from './api.js';
 import {adForm} from './form.js';
+import { isEscapeKey } from './util.js';
+import { buttonReset } from './map.js';
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element', // Элемент, на который будут добавляться классы
@@ -44,6 +47,36 @@ typeOfHousing.addEventListener('change', () => {
   price.placeholder = minPriceOfHousing[typeOfHousing.value];
 });
 
+const sliderElement = document.querySelector('.ad-form__slider');
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: 100000,
+  },
+  start: price.placeholder,
+  step: 10,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    },
+  },
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  price.value = sliderElement.noUiSlider.get();
+});
+
+price.addEventListener('change', () => sliderElement.noUiSlider.set(price.value));
+
+const resetSlider = () => {
+  sliderElement.noUiSlider.reset();
+};
+
 //Валидация полей количество комнат и количество мест
 const roomNumber = adForm.querySelector('#room_number');
 const capacity = adForm.querySelector('#capacity');
@@ -84,8 +117,69 @@ timeOut.addEventListener('change', onTimeOutChange);
 //Поле адреса
 export const address = adForm.querySelector('#address');
 
-//Валидация формы при отправке
-adForm.addEventListener('submit', (evt) => {
+const successTemlate = document.querySelector('#success').content.querySelector('.success');
+const successMessage = successTemlate.cloneNode(true);
+const body = document.querySelector('body');
+const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+const errorMessage = errorTemplate.cloneNode(true);
+
+
+buttonReset.addEventListener('click', (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  adForm.reset();
+  resetSlider();
+});
+
+const onSuccessMessageClick = () => {
+  successMessage.remove();
+
+  document.removeEventListener('click', onSuccessMessageClick);
+};
+
+const onSuccessMessageKeydown = () => {
+  if (isEscapeKey) {successMessage.remove();}
+
+  document.removeEventListener('keydown', onSuccessMessageKeydown);
+};
+
+const sendFormSuccess = () => {
+  body.appendChild(successMessage);
+  document.addEventListener('click', onSuccessMessageClick);
+  document.addEventListener('keydown', onSuccessMessageKeydown);
+  adForm.reset();
+  resetSlider();
+};
+
+const onErrorMessageClick = () => {
+  errorMessage.remove();
+
+  document.removeEventListener('click', onErrorMessageClick);
+};
+
+const onErrorMessageKeydown = () => {
+  if (isEscapeKey) {errorMessage.remove();}
+
+  document.removeEventListener('keydown', onErrorMessageKeydown);
+};
+
+const sendFormError = () => {
+  body.appendChild(errorMessage);
+  document.addEventListener('click', onErrorMessageClick);
+  document.addEventListener('keydown', onErrorMessageKeydown);
+};
+
+
+adForm.addEventListener('submit', async (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    const formData = new FormData (evt.target);
+    const result = await sendData(formData);
+    if (result) {
+      sendFormSuccess();
+    } else {
+      sendFormError();
+    }
+  }
 });

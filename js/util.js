@@ -84,6 +84,6 @@ const getCreatedAd = () => {
 };
 
 //Функция создает 10 случайных объявлений
-const getCreatedAds = () => Array.from({length: COUNTER_ADS}, getCreatedAd);
+export const getCreatedAds = () => Array.from({length: COUNTER_ADS}, getCreatedAd);
 
-export {getCreatedAds};
+export const isEscapeKey = (evt) => evt.key === 'Escape';

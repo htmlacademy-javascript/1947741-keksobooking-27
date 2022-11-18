@@ -1,15 +1,15 @@
 //Записываем в константу число, равное количеству сгенерированных объектов
-const COUNTER_ADS = 10;
+export const COUNTER_ADS = 10;
 
 //Записываем в константы минимальные и максимальные значения для широты и долготы
-const LAT_MIN = 35.65000;
-const LAT_MAX = 35.70000;
-const LNG_MIN = 139.70000;
-const LNG_MAX = 139.80000;
+export const LAT_MIN = 35.65000;
+export const LAT_MAX = 35.70000;
+export const LNG_MIN = 139.70000;
+export const LNG_MAX = 139.80000;
 
 //Запишем в константы имеющиеся массивы
 
-const TITLES = [
+export const TITLES = [
   'Прекрасная квартирка',
   'Не такая прекрасная квартирка',
   'Странный дом',
@@ -18,7 +18,7 @@ const TITLES = [
   'Квартира для большой семьи'
 ];
 
-const TYPES = [
+export const TYPES = [
   'palace',
   'flat',
   'house',
@@ -26,13 +26,13 @@ const TYPES = [
   'hotel'
 ];
 
-const CHECK_TIMES = [
+export const CHECK_TIMES = [
   '12:00',
   '13:00',
   '14:00'
 ];
 
-const FEATURES = [
+export const FEATURES = [
   'wifi',
   'dishwasher',
   'parking',
@@ -41,7 +41,7 @@ const FEATURES = [
   'conditioner'
 ];
 
-const DESCRIPTIONS = [
+export const DESCRIPTIONS = [
   'В квартире имеется вся необходимая для жизни техника',
   'Полностью мебелерованная квартира',
   'Прекрасный вид на город',
@@ -50,10 +50,8 @@ const DESCRIPTIONS = [
   'У квартиры есть свои недостатки, но они незначительные'
 ];
 
-const PHOTOS = [
+export const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
 ];
-
-export {COUNTER_ADS, LAT_MIN, LAT_MAX, LNG_MIN, LNG_MAX, TITLES, TYPES, CHECK_TIMES, FEATURES, DESCRIPTIONS, PHOTOS};
