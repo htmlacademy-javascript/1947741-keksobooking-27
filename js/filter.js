@@ -1,83 +1,70 @@
-const DEFAULT_VALUE = 'any';
-const ADS_COUNT = 10;
-export const RENDER_DELAY = 500;
-
-const filters = document.querySelector('.map__filters');
-const typeFilter = filters.querySelector('#housing-type');
-const priceFilter = filters.querySelector('#housing-price');
-const roomsFilter = filters.querySelector('#housing-rooms');
-const guestsFilter = filters.querySelector('#housing-guests');
-const featuresFilter = filters.querySelector('#housing-features');
-
-const priceFork = {
+const PRICE_VALUES = {
   'low': [0, 10000],
   'middle': [10000, 50000],
   'high': [50000, 100000]
 };
 
-const filterType = (ad) => {
-  if (typeFilter.value === DEFAULT_VALUE) {
-    return true;
-  }
-  return ad.offer.type === typeFilter.value;
-};
-
-const filterPrice = (ad) => {
-  const priceValue = priceFilter.value;
-
-  if (priceValue === DEFAULT_VALUE) {
-    return true;
-  }
-
-  const minFilteredPrice = priceFork[priceFilter.value][0];
-  const maxFilteredPrice = priceFork[priceFilter.value][1];
-
-  return ad.offer.price >= minFilteredPrice && ad.offer.price <= maxFilteredPrice;
-};
-
-const filterRooms = (ad) => {
-  if (roomsFilter.value === DEFAULT_VALUE) {
-    return true;
-  }
-  return ad.offer.rooms === Number(roomsFilter.value);
-
-};
-
-const filterGuests = (ad) => {
-  if (guestsFilter.value === DEFAULT_VALUE) {
-    return true;
-  }
-  return ad.offer.rooms === Number(guestsFilter.value);
-};
-
-const filterFeatures = (ad) => {
-  const adFeaturesList = ad.offer.features;
-  const checkedFields = featuresFilter.querySelectorAll('.map__checkbox:checked');
-  const checkedValues = [];
-  checkedFields.forEach((field) => {
-    checkedValues.push(field.value);
-  });
-
-  if (checkedValues.length === 0) {
-    return true;
-  } else if (adFeaturesList) {
-    return checkedValues.every((value) => adFeaturesList.includes(value));
-  }
-  return false;
-};
-
-export const filterAds = (ads) => {
-  const filteredArray = [];
-
-  for (const ad of ads) {
-    if (filterType(ad) && filterPrice(ad) && filterRooms(ad) && filterGuests(ad) && filterFeatures(ad)) {
-      filteredArray.push(ad);
-
-      if (filteredArray.length === ADS_COUNT) {
-        break;
-      }
+export const getActiveFilters = () => {
+  const filtersForm = document.querySelector('#filters-form');
+  const form = new FormData(filtersForm);
+  const data = {};
+  form.forEach((value, key) => {
+    if (data[key]) {
+      data[key] = typeof data[key] === 'string'
+        ? [data[key], value]
+        : [...data[key], value];
+    } else {
+      data[key] = value;
     }
-  }
+  });
+  return data;
+};
 
-  return filteredArray;
+const checkOnType = (type, filterType) => {
+  if (filterType === 'any'){
+    return true;
+  }
+  return filterType === type;
+};
+
+const checkOnPrice = (adPrice, filterPriceCategory) => {
+  if (filterPriceCategory === 'any'){
+    return true;
+  }
+  const filterPrice = PRICE_VALUES[filterPriceCategory];
+  const min = filterPrice[0];
+  const max = filterPrice[1];
+  return min <= adPrice && adPrice <= max;
+};
+
+const checkOnCountValue = (itemValue, filtersValue) => {
+  if (filtersValue === 'any') {
+    return true;
+  }
+  return itemValue === Number(filtersValue);
+};
+
+const checkOnFeatures = (adFeatures = [], filtersFeatures = []) =>{
+  if(typeof filtersFeatures === 'string') {
+    return adFeatures.includes(filtersFeatures);
+  }
+  return filtersFeatures.every((value) => adFeatures.includes(value));
+};
+
+export const checkAdOnFilters = (ad, filters) => {
+  const typeCheck = checkOnType(ad.offer.type, filters.type);
+
+  const priceCheck = checkOnPrice(ad.offer.price, filters.price);
+
+  const roomsCheck = checkOnCountValue(ad.offer.rooms, filters.rooms);
+
+  const guestsCheck = checkOnCountValue(ad.offer.guests, filters.guests);
+
+  const featuresCheck = checkOnFeatures(ad.offer.features || [], filters.features);
+
+  return typeCheck &&
+    priceCheck &&
+    roomsCheck &&
+    guestsCheck &&
+    featuresCheck;
 };

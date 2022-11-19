@@ -1,7 +1,8 @@
+const ALERT_SHOW_TIME = 5000;
+
 export const isEscapeKey = (evt) => evt.key === 'Escape';
 
 //Функция создает сообщение об ошибке
-const ALERT_SHOW_TIME = 5000;
 export const showAlert = (message) => {
   const alert = document.createElement('div');
   alert.style.position = 'absolute';

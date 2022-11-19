@@ -3,15 +3,16 @@ import { adForm } from './form.js';
 import {address} from './form-validate.js';
 import { createCardTemplate } from './create-card.js';
 
+const CENTER_COORDINATES = {
+  lat: 35.68950,
+  lng: 139.69171,
+};
+
 const buttonSubmit = adForm.querySelector('.ad-form__submit');
 export const buttonReset = adForm.querySelector('.ad-form__reset');
 
 export const createMap = () => {
 
-  const CENTER_COORDINATES = {
-    lat: 35.68950,
-    lng: 139.69171,
-  };
   const mapScale = 12;
 
   //Создаем карту с координатами
@@ -58,7 +59,6 @@ export const createMap = () => {
     address.value = `${newCoordinates.lat.toFixed(5)} ${newCoordinates.lng.toFixed(5)}`;
   });
 
-
   //Возвращает начальные координаты маркера при сбросе введенных данных и отправке формы
 
   const getInitialCoordinates = () => {
@@ -74,8 +74,8 @@ export const createMap = () => {
   return {pinIcon, map};
 };
 
-export const createMarkers = (similarAds) => {
-  const {pinIcon, map} = createMap();
+export const createMarkers = (similarAds, pinIcon, map) => {
+  const markerGroup = L.layerGroup().addTo(map);
 
   //Добавление меток объявлений на карту
   const createMarker = (similarAd) => {
@@ -90,7 +90,7 @@ export const createMarkers = (similarAds) => {
     );
 
     marker
-      .addTo(map)
+      .addTo(markerGroup)
       .bindPopup(createCardTemplate(similarAd));
   };
 
@@ -98,4 +98,6 @@ export const createMarkers = (similarAds) => {
     createMarker(similarAd);
   });
 
+
+  return markerGroup;
 };
