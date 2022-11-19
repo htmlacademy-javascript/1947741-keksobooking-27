@@ -1,4 +1,4 @@
-import {activePage} from './form.js';
+import {enableUserForm} from './form.js';
 import { adForm } from './form.js';
 import {address} from './form-validate.js';
 import { createCardTemplate } from './create-card.js';
@@ -17,7 +17,7 @@ export const createMap = () => {
   //Создаем карту с координатами
   const map = L.map('map-canvas')
     .on('load', () => {
-      activePage(true);
+      enableUserForm();
     })
     .setView(CENTER_COORDINATES, mapScale);
 
@@ -97,4 +97,5 @@ export const createMarkers = (similarAds) => {
   similarAds.forEach((similarAd) => {
     createMarker(similarAd);
   });
+
 };

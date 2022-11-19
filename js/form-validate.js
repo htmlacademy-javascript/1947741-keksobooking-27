@@ -2,6 +2,7 @@ import { sendData } from './api.js';
 import {adForm} from './form.js';
 import { isEscapeKey } from './util.js';
 import { buttonReset } from './map.js';
+import { resetImages } from './images.js';
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element', // Элемент, на который будут добавляться классы
@@ -128,6 +129,7 @@ buttonReset.addEventListener('click', (evt) => {
   evt.preventDefault();
   adForm.reset();
   resetSlider();
+  resetImages();
 });
 
 const onSuccessMessageClick = () => {
@@ -148,6 +150,7 @@ const sendFormSuccess = () => {
   document.addEventListener('keydown', onSuccessMessageKeydown);
   adForm.reset();
   resetSlider();
+  resetImages();
 };
 
 const onErrorMessageClick = () => {
