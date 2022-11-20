@@ -1,13 +1,13 @@
 import { sendData } from './api.js';
-import {adForm} from './form.js';
+import { adForm } from './form.js';
 import { isEscapeKey } from './util.js';
-import { buttonReset } from './map.js';
+import { buttonReset, buttonSubmit } from './map.js';
 import { resetImages } from './images.js';
 
 const MIN_LENGTH_TITLE = 30;
 const MAX_LENGTH_TITLE = 100;
 const MAX_PRICE = 100000;
-const MIN_PRICE_OF_HOUSING = {
+const MIN_PRICES_OF_HOUSING = {
   bungalow: 0,
   flat: 1000,
   hotel: 3000,
@@ -45,20 +45,20 @@ const validateTitle = (value) => value.length >= MIN_LENGTH_TITLE && value.lengt
 pristine.addValidator(title, validateTitle, `От ${MIN_LENGTH_TITLE}  до ${MAX_LENGTH_TITLE} символов`);
 
 //Валидация поля цены за ночь
-const validatePrice = () => price.value >= MIN_PRICE_OF_HOUSING[typeOfHousing.value];
+const validatePrice = () => price.value >= MIN_PRICES_OF_HOUSING[typeOfHousing.value];
 const getPriceErrorMessage = () => {
   if (validatePrice){
-    return `Скорректируйте цену. ${MIN_PRICE_OF_HOUSING[typeOfHousing.value]} рублей - минимальная цена за данный тип жилья`;
+    return `Скорректируйте цену. ${MIN_PRICES_OF_HOUSING[typeOfHousing.value]} рублей - минимальная цена за данный тип жилья`;
   } else if (price.value > MAX_PRICE) {
     return `Укажите цену ниже максимально возможной цены - ${MAX_PRICE} рублей`;
   }
 };
-price.placeholder = MIN_PRICE_OF_HOUSING[typeOfHousing.value];
+price.placeholder = MIN_PRICES_OF_HOUSING[typeOfHousing.value];
 
 pristine.addValidator(price, validatePrice, getPriceErrorMessage);
 
 typeOfHousing.addEventListener('change', () => {
-  price.placeholder = MIN_PRICE_OF_HOUSING[typeOfHousing.value];
+  price.placeholder = MIN_PRICES_OF_HOUSING[typeOfHousing.value];
 });
 
 noUiSlider.create(sliderElement, {
@@ -168,11 +168,22 @@ const sendFormError = () => {
   document.addEventListener('keydown', onErrorMessageKeydown);
 };
 
+const blockButtonSubmit = () => {
+  buttonSubmit.disabled = true;
+  buttonSubmit.textContent = 'Публикуется...';
+};
+
+const unblockButtonSubmit = () => {
+  buttonSubmit.disabled = false;
+  buttonSubmit.textContent = 'Опубликовать';
+};
+
 adForm.addEventListener('submit', async (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
 
   if (isValid) {
+    blockButtonSubmit();
     const formData = new FormData (evt.target);
     const result = await sendData(formData);
     if (result) {
@@ -180,5 +191,6 @@ adForm.addEventListener('submit', async (evt) => {
     } else {
       sendFormError();
     }
+    unblockButtonSubmit();
   }
 });

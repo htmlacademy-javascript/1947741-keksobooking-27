@@ -1,14 +1,15 @@
-import {enableUserForm} from './form.js';
+import { enableUserForm } from './form.js';
 import { adForm } from './form.js';
-import {address} from './form-validate.js';
+import { address } from './form-validate.js';
 import { createCardTemplate } from './create-card.js';
 
 const CENTER_COORDINATES = {
   lat: 35.68950,
   lng: 139.69171,
 };
+const DIGITS_IN_COORDINATE = 5;
 
-const buttonSubmit = adForm.querySelector('.ad-form__submit');
+export const buttonSubmit = adForm.querySelector('.ad-form__submit');
 export const buttonReset = adForm.querySelector('.ad-form__reset');
 
 export const createMap = () => {
@@ -56,7 +57,7 @@ export const createMap = () => {
 
   mainPinMarker.on('moveend', (evt) => {
     const newCoordinates = evt.target.getLatLng();
-    address.value = `${newCoordinates.lat.toFixed(5)} ${newCoordinates.lng.toFixed(5)}`;
+    address.value = `${newCoordinates.lat.toFixed(DIGITS_IN_COORDINATE)} ${newCoordinates.lng.toFixed(DIGITS_IN_COORDINATE)}`;
   });
 
   //Возвращает начальные координаты маркера при сбросе введенных данных и отправке формы
@@ -64,6 +65,7 @@ export const createMap = () => {
   const getInitialCoordinates = () => {
     mainPinMarker.setLatLng(CENTER_COORDINATES);
     map.setView(CENTER_COORDINATES, mapScale);
+    map.closePopup();
     address.value = `${CENTER_COORDINATES.lat} ${CENTER_COORDINATES.lng}`;
   };
 
@@ -97,7 +99,6 @@ export const createMarkers = (similarAds, pinIcon, map) => {
   similarAds.forEach((similarAd) => {
     createMarker(similarAd);
   });
-
 
   return markerGroup;
 };

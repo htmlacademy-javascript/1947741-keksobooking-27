@@ -1,7 +1,7 @@
 import './form.js';
 import './form-validate.js';
 import { getData } from './api.js';
-import {createMap, createMarkers} from './map.js';
+import { createMap, createMarkers } from './map.js';
 import { debounce } from './util.js';
 import { checkAdOnFilters, getActiveFilters } from './filter.js';
 

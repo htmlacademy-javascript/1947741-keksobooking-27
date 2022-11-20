@@ -5,7 +5,7 @@ const mapFiltersSelects = mapFilters.querySelectorAll('select');
 const mapFiltersFieldsets = mapFilters.querySelector('fieldset');
 
 export const disableFilterForm = () => {
-  mapFilters.classList.add('ad-form--disabled');
+  mapFilters.classList.add('map__filters--disabled');
 
   mapFiltersSelects.forEach((select) => {
     select.setAttribute('disabled', 'disabled');
@@ -23,7 +23,7 @@ export const disableUserForm = () => {
 };
 
 export const enableFilterForm = () => {
-  mapFilters.classList.remove('ad-form--disabled');
+  mapFilters.classList.remove('map__filters--disabled');
 
   mapFiltersSelects.forEach((select) => {
     select.removeAttribute('disabled');
