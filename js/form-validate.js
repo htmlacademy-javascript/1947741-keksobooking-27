@@ -1,7 +1,35 @@
 import { sendData } from './api.js';
-import {adForm} from './form.js';
+import { adForm } from './form.js';
 import { isEscapeKey } from './util.js';
-import { buttonReset } from './map.js';
+import { buttonReset, buttonSubmit } from './map.js';
+import { resetImages } from './images.js';
+
+const MIN_LENGTH_TITLE = 30;
+const MAX_LENGTH_TITLE = 100;
+const MAX_PRICE = 100000;
+const MIN_PRICES_OF_HOUSING = {
+  bungalow: 0,
+  flat: 1000,
+  hotel: 3000,
+  house: 5000,
+  palace: 10000
+};
+
+const title = adForm.querySelector('#title');
+export const price = adForm.querySelector('#price');
+export const typeOfHousing = adForm.querySelector('#type');
+const sliderElement = document.querySelector('.ad-form__slider');
+const roomNumber = adForm.querySelector('#room_number');
+const capacity = adForm.querySelector('#capacity');
+const timeIn = adForm.querySelector('#timein');
+const timeOut = adForm.querySelector('#timeout');
+export const address = adForm.querySelector('#address');
+const successTemlate = document.querySelector('#success').content.querySelector('.success');
+const successMessage = successTemlate.cloneNode(true);
+const body = document.querySelector('body');
+const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+const errorMessage = errorTemplate.cloneNode(true);
+
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element', // Элемент, на который будут добавляться классы
@@ -12,42 +40,26 @@ const pristine = new Pristine(adForm, {
 });
 
 //Валидация поля заголовка объявления
-const title = adForm.querySelector('#title');
-const minLengthTitle = 30;
-const maxLengthTitle = 100;
-const validateTitle = (value) => value.length >= minLengthTitle && value.length <= maxLengthTitle;
+const validateTitle = (value) => value.length >= MIN_LENGTH_TITLE && value.length <= MAX_LENGTH_TITLE;
 
-pristine.addValidator(title, validateTitle, `От ${minLengthTitle}  до ${maxLengthTitle} символов`);
+pristine.addValidator(title, validateTitle, `От ${MIN_LENGTH_TITLE}  до ${MAX_LENGTH_TITLE} символов`);
 
 //Валидация поля цены за ночь
-export const price = adForm.querySelector('#price');
-const maxPrice = 100000;
-export const typeOfHousing = adForm.querySelector('#type');
-export const minPriceOfHousing = {
-  bungalow: 0,
-  flat: 1000,
-  hotel: 3000,
-  house: 5000,
-  palace: 10000
-};
-
-const validatePrice = () => price.value >= minPriceOfHousing[typeOfHousing.value];
+const validatePrice = () => price.value >= MIN_PRICES_OF_HOUSING[typeOfHousing.value];
 const getPriceErrorMessage = () => {
   if (validatePrice){
-    return `Скорректируйте цену. ${minPriceOfHousing[typeOfHousing.value]} рублей - минимальная цена за данный тип жилья`;
-  } else if (price.value > maxPrice) {
-    return `Укажите цену ниже максимально возможной цены - ${maxPrice} рублей`;
+    return `Скорректируйте цену. ${MIN_PRICES_OF_HOUSING[typeOfHousing.value]} рублей - минимальная цена за данный тип жилья`;
+  } else if (price.value > MAX_PRICE) {
+    return `Укажите цену ниже максимально возможной цены - ${MAX_PRICE} рублей`;
   }
 };
-price.placeholder = minPriceOfHousing[typeOfHousing.value];
+price.placeholder = MIN_PRICES_OF_HOUSING[typeOfHousing.value];
 
 pristine.addValidator(price, validatePrice, getPriceErrorMessage);
 
 typeOfHousing.addEventListener('change', () => {
-  price.placeholder = minPriceOfHousing[typeOfHousing.value];
+  price.placeholder = MIN_PRICES_OF_HOUSING[typeOfHousing.value];
 });
-
-const sliderElement = document.querySelector('.ad-form__slider');
 
 noUiSlider.create(sliderElement, {
   range: {
@@ -78,8 +90,6 @@ const resetSlider = () => {
 };
 
 //Валидация полей количество комнат и количество мест
-const roomNumber = adForm.querySelector('#room_number');
-const capacity = adForm.querySelector('#capacity');
 const roomNumberMax = 3;
 const capasityMin = 0;
 
@@ -99,9 +109,6 @@ roomNumber.addEventListener('change', onCapacityChange);
 capacity.addEventListener('change', onRoomNumberChange);
 
 //Валидация полей времени заезда и времени выезда
-const timeIn = adForm.querySelector('#timein');
-const timeOut = adForm.querySelector('#timeout');
-
 const onTimeInChange = () => {
   timeOut.value = timeIn.value;
 };
@@ -114,20 +121,12 @@ timeIn.addEventListener('change', onTimeInChange);
 
 timeOut.addEventListener('change', onTimeOutChange);
 
-//Поле адреса
-export const address = adForm.querySelector('#address');
-
-const successTemlate = document.querySelector('#success').content.querySelector('.success');
-const successMessage = successTemlate.cloneNode(true);
-const body = document.querySelector('body');
-const errorTemplate = document.querySelector('#error').content.querySelector('.error');
-const errorMessage = errorTemplate.cloneNode(true);
-
-
+//
 buttonReset.addEventListener('click', (evt) => {
   evt.preventDefault();
   adForm.reset();
   resetSlider();
+  resetImages();
 });
 
 const onSuccessMessageClick = () => {
@@ -148,6 +147,7 @@ const sendFormSuccess = () => {
   document.addEventListener('keydown', onSuccessMessageKeydown);
   adForm.reset();
   resetSlider();
+  resetImages();
 };
 
 const onErrorMessageClick = () => {
@@ -168,12 +168,22 @@ const sendFormError = () => {
   document.addEventListener('keydown', onErrorMessageKeydown);
 };
 
+const blockButtonSubmit = () => {
+  buttonSubmit.disabled = true;
+  buttonSubmit.textContent = 'Публикуется...';
+};
+
+const unblockButtonSubmit = () => {
+  buttonSubmit.disabled = false;
+  buttonSubmit.textContent = 'Опубликовать';
+};
 
 adForm.addEventListener('submit', async (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
 
   if (isValid) {
+    blockButtonSubmit();
     const formData = new FormData (evt.target);
     const result = await sendData(formData);
     if (result) {
@@ -181,5 +191,6 @@ adForm.addEventListener('submit', async (evt) => {
     } else {
       sendFormError();
     }
+    unblockButtonSubmit();
   }
 });

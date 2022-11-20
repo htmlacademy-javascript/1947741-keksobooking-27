@@ -1,4 +1,4 @@
-import { showAlert } from './alert-message.js';
+import { showAlert } from './util.js';
 
 export const getData = async () => {
   try {
