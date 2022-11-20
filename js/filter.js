@@ -51,6 +51,7 @@ const checkOnFeatures = (adFeatures = [], filtersFeatures = []) =>{
   return filtersFeatures.every((value) => adFeatures.includes(value));
 };
 
+//Функция, которая фильтрует объявления по всем фильтрам
 export const checkAdOnFilters = (ad, filters) => {
   const typeCheck = checkOnType(ad.offer.type, filters.type);
 
