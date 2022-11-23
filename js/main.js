@@ -16,14 +16,23 @@ export const init = async () => {
   const filtersForm = document.querySelector('#filters-form');
   createMarkers(shortAds);
 
-
   filtersForm.addEventListener('change', debounce(() => {
     resetMarkersLayerGroup();
     const currentFilters = getActiveFilters();
     const currentFilteredAds = similarAds.filter((ad) => checkAdOnFilters(ad, currentFilters));
-    const currentShortAds = currentFilteredAds.slice(0, ADS_COUNT);
+    const filteredOffers = [];
 
-    createMarkers(currentShortAds);
+    for (let i = 0; i < currentFilteredAds.length; i++) {
+      const offer = currentFilteredAds[i];
+      if (currentFilteredAds) {
+        filteredOffers.push(offer);
+      }
+      if (filteredOffers.length >= ADS_COUNT) {
+        break;
+      }
+    }
+
+    createMarkers(filteredOffers);
   }, RENDER_DELAY));
 };
 
