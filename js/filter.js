@@ -1,4 +1,4 @@
-const PRICE_VALUES = {
+const priceValues = {
   'low': [0, 10000],
   'middle': [10000, 50000],
   'high': [50000, 100000]
@@ -31,7 +31,7 @@ const checkOnPrice = (adPrice, filterPriceCategory) => {
   if (filterPriceCategory === 'any'){
     return true;
   }
-  const filterPrice = PRICE_VALUES[filterPriceCategory];
+  const filterPrice = priceValues[filterPriceCategory];
   const min = filterPrice[0];
   const max = filterPrice[1];
   return min <= adPrice && adPrice <= max;

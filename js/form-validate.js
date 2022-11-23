@@ -1,13 +1,13 @@
 import { sendData } from './api.js';
-import { adForm } from './form.js';
+import { adForm, mapFilters } from './form.js';
 import { isEscapeKey } from './util.js';
-import { buttonReset, buttonSubmit } from './map.js';
+import { buttonReset, buttonSubmit, CENTER_COORDINATES, resetCoordinates } from './map.js';
 import { resetImages } from './images.js';
 
 const MIN_LENGTH_TITLE = 30;
 const MAX_LENGTH_TITLE = 100;
 const MAX_PRICE = 100000;
-const MIN_PRICES_OF_HOUSING = {
+const minPricesOfHousing = {
   bungalow: 0,
   flat: 1000,
   hotel: 3000,
@@ -45,26 +45,26 @@ const validateTitle = (value) => value.length >= MIN_LENGTH_TITLE && value.lengt
 pristine.addValidator(title, validateTitle, `От ${MIN_LENGTH_TITLE}  до ${MAX_LENGTH_TITLE} символов`);
 
 //Валидация поля цены за ночь
-const validatePrice = () => price.value >= MIN_PRICES_OF_HOUSING[typeOfHousing.value];
+const validatePrice = () => price.value >= minPricesOfHousing[typeOfHousing.value];
 const getPriceErrorMessage = () => {
   if (validatePrice){
-    return `Скорректируйте цену. ${MIN_PRICES_OF_HOUSING[typeOfHousing.value]} рублей - минимальная цена за данный тип жилья`;
+    return `Скорректируйте цену. ${minPricesOfHousing[typeOfHousing.value]} рублей - минимальная цена за данный тип жилья`;
   } else if (price.value > MAX_PRICE) {
     return `Укажите цену ниже максимально возможной цены - ${MAX_PRICE} рублей`;
   }
 };
-price.placeholder = MIN_PRICES_OF_HOUSING[typeOfHousing.value];
+price.placeholder = minPricesOfHousing[typeOfHousing.value];
 
 pristine.addValidator(price, validatePrice, getPriceErrorMessage);
 
 typeOfHousing.addEventListener('change', () => {
-  price.placeholder = MIN_PRICES_OF_HOUSING[typeOfHousing.value];
+  price.placeholder = minPricesOfHousing[typeOfHousing.value];
 });
 
 noUiSlider.create(sliderElement, {
   range: {
     min: 0,
-    max: 100000,
+    max: MAX_PRICE,
   },
   start: price.placeholder,
   step: 10,
@@ -97,16 +97,16 @@ const validateCapacity = () => (roomNumber.value >= capacity.value && roomNumber
 
 pristine.addValidator(capacity, validateCapacity, 'Количество комнат не соответсвует количеству гостей');
 
-function onCapacityChange() {
+function onRoomNumberChange() {
   pristine.validate(capacity);
 }
 
-function onRoomNumberChange() {
+function onCapacityChange() {
   pristine.validate(roomNumber);
 }
 
-roomNumber.addEventListener('change', onCapacityChange);
-capacity.addEventListener('change', onRoomNumberChange);
+roomNumber.addEventListener('change', onRoomNumberChange);
+capacity.addEventListener('change', onCapacityChange);
 
 //Валидация полей времени заезда и времени выезда
 const onTimeInChange = () => {
@@ -121,51 +121,46 @@ timeIn.addEventListener('change', onTimeInChange);
 
 timeOut.addEventListener('change', onTimeOutChange);
 
+address.value = `${CENTER_COORDINATES.lat} ${CENTER_COORDINATES.lng}`;
+
 //
+const resetPage = () => {
+  adForm.reset();
+  mapFilters.reset();
+  resetSlider();
+  resetImages();
+  resetCoordinates();
+};
+
 buttonReset.addEventListener('click', (evt) => {
   evt.preventDefault();
-  adForm.reset();
-  resetSlider();
-  resetImages();
+  resetPage();
 });
 
-const onSuccessMessageClick = () => {
+const onDocumentClick = () => {
   successMessage.remove();
-
-  document.removeEventListener('click', onSuccessMessageClick);
-};
-
-const onSuccessMessageKeydown = () => {
-  if (isEscapeKey) {successMessage.remove();}
-
-  document.removeEventListener('keydown', onSuccessMessageKeydown);
-};
-
-const sendFormSuccess = () => {
-  body.appendChild(successMessage);
-  document.addEventListener('click', onSuccessMessageClick);
-  document.addEventListener('keydown', onSuccessMessageKeydown);
-  adForm.reset();
-  resetSlider();
-  resetImages();
-};
-
-const onErrorMessageClick = () => {
   errorMessage.remove();
-
-  document.removeEventListener('click', onErrorMessageClick);
+  document.removeEventListener('click', onDocumentClick);
 };
 
-const onErrorMessageKeydown = () => {
-  if (isEscapeKey) {errorMessage.remove();}
-
-  document.removeEventListener('keydown', onErrorMessageKeydown);
+const onDocumentKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    successMessage.remove();
+    errorMessage.remove();
+  }
+  document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-const sendFormError = () => {
+const showSuccessMessage = () => {
+  body.appendChild(successMessage);
+  document.addEventListener('click', onDocumentClick);
+  document.addEventListener('keydown', onDocumentKeydown);
+};
+
+const showErrorMessage = () => {
   body.appendChild(errorMessage);
-  document.addEventListener('click', onErrorMessageClick);
-  document.addEventListener('keydown', onErrorMessageKeydown);
+  document.addEventListener('click', onDocumentClick);
+  document.addEventListener('keydown', onDocumentKeydown);
 };
 
 const blockButtonSubmit = () => {
@@ -187,9 +182,10 @@ adForm.addEventListener('submit', async (evt) => {
     const formData = new FormData (evt.target);
     const result = await sendData(formData);
     if (result) {
-      sendFormSuccess();
+      showSuccessMessage();
+      resetPage();
     } else {
-      sendFormError();
+      showErrorMessage();
     }
     unblockButtonSubmit();
   }

@@ -1,5 +1,5 @@
 //Добавляем словарь с типами жилья
-const TYPES_HOUSING = {
+const typesHousing = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
   house: 'Дом',
@@ -12,13 +12,13 @@ const cardTemplate = document.querySelector('#card').content;
 //В шаблоне находим разметку
 export const card = cardTemplate.querySelector('.popup');
 
-export const createCardTemplate = ({author, offer}) => {
+export const createCardElement = ({author, offer}) => {
   const cardElement = card.cloneNode(true);
   cardElement.querySelector('.popup__avatar').src = author.avatar;
   cardElement.querySelector('.popup__title').textContent = offer.title;
   cardElement.querySelector('.popup__text--address').textContent = offer.address;
   cardElement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
-  cardElement.querySelector('.popup__type').textContent = TYPES_HOUSING[offer.type];
+  cardElement.querySelector('.popup__type').textContent = typesHousing[offer.type];
   cardElement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
   cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
 
