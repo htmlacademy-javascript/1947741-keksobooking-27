@@ -1,7 +1,7 @@
 import { sendData } from './api.js';
 import { adForm, mapFilters } from './form.js';
 import { isEscapeKey } from './util.js';
-import { buttonReset, buttonSubmit, CENTER_COORDINATES, resetCoordinates } from './map.js';
+import { buttonReset, buttonSubmit, centerCoordinates, resetCoordinates } from './map.js';
 import { resetImages } from './images.js';
 
 const MIN_LENGTH_TITLE = 30;
@@ -121,7 +121,7 @@ timeIn.addEventListener('change', onTimeInChange);
 
 timeOut.addEventListener('change', onTimeOutChange);
 
-address.value = `${CENTER_COORDINATES.lat} ${CENTER_COORDINATES.lng}`;
+address.value = `${centerCoordinates.lat} ${centerCoordinates.lng}`;
 
 //
 const resetPage = () => {

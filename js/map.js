@@ -4,7 +4,7 @@ import { address } from './form-validate.js';
 import { createCardElement } from './create-card.js';
 import { init } from './main.js';
 
-export const CENTER_COORDINATES = {
+export const centerCoordinates = {
   lat: 35.68950,
   lng: 139.69171,
 };
@@ -22,7 +22,7 @@ const map = L.map('map-canvas')
   .on('load', () => {
     enableUserForm();
   })
-  .setView(CENTER_COORDINATES, mapScale);
+  .setView(centerCoordinates, mapScale);
 
 //Добавляем слой с картой
 L.tileLayer(
@@ -46,7 +46,7 @@ const pinIcon = L.icon({
 });
 
 const mainPinMarker = L.marker(
-  CENTER_COORDINATES,
+  centerCoordinates,
   {
     draggable: true,
     icon: mainPinIcon,
@@ -95,11 +95,10 @@ export const resetMarkersLayerGroup = () => markerGroup.clearLayers();
 //Сброс маркеров, карты и поля адреса
 
 export const resetCoordinates = () => {
-  mainPinMarker.setLatLng(CENTER_COORDINATES);
-  map.setView(CENTER_COORDINATES, mapScale);
+  mainPinMarker.setLatLng(centerCoordinates);
+  map.setView(centerCoordinates, mapScale);
   map.closePopup();
-  address.value = `${CENTER_COORDINATES.lat} ${CENTER_COORDINATES.lng}`;
+  address.value = `${centerCoordinates.lat} ${centerCoordinates.lng}`;
   resetMarkersLayerGroup();
   init();
 };
-

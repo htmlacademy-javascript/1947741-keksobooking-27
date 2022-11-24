@@ -53,7 +53,7 @@ const checkOnFeatures = (adFeatures = [], filtersFeatures = []) =>{
 };
 
 //Функция, которая фильтрует объявления по всем фильтрам
-export const checkAdOnFilters = (ad, filters) => {
+const checkAdOnFilters = (ad, filters) => {
   const typeCheck = checkOnType(ad.offer.type, filters.type);
 
   const priceCheck = checkOnPrice(ad.offer.price, filters.price);
