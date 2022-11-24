@@ -1,3 +1,4 @@
+const ADS_COUNT = 10;
 const priceValues = {
   'low': [0, 10000],
   'middle': [10000, 50000],
@@ -68,4 +69,19 @@ export const checkAdOnFilters = (ad, filters) => {
     roomsCheck &&
     guestsCheck &&
     featuresCheck;
+};
+export const getFilteredOffers = (offers, filters) => {
+  const filteredOffers = [];
+
+  for (let i = 0; i < offers.length; i++) {
+    const offer = offers[i];
+    if (checkAdOnFilters(offer, filters)) {
+
+      filteredOffers.push(offer);
+    }
+    if (filteredOffers.length >= ADS_COUNT) {
+      break;
+    }
+  }
+  return filteredOffers;
 };
