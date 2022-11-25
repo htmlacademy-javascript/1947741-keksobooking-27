@@ -1,4 +1,4 @@
-const ADS_COUNT = 10;
+export const ADS_COUNT = 10;
 const priceValues = {
   'low': [0, 10000],
   'middle': [10000, 50000],
@@ -70,18 +70,32 @@ const checkAdOnFilters = (ad, filters) => {
     guestsCheck &&
     featuresCheck;
 };
+// export const getFilteredOffers = (offers, filters) => {
+//   const filteredOffers = [];
+
+//   for (let i = 0; i < offers.length; i++) {
+//     const offer = offers[i];
+//     if (checkAdOnFilters(offer, filters)) {
+
+//       filteredOffers.push(offer);
+//     }
+//     if (filteredOffers.length >= ADS_COUNT) {
+//       break;
+//     }
+//   }
+//   return filteredOffers;
+// };
+
 export const getFilteredOffers = (offers, filters) => {
   const filteredOffers = [];
 
-  for (let i = 0; i < offers.length; i++) {
-    const offer = offers[i];
+  offers.some((offer) => {
     if (checkAdOnFilters(offer, filters)) {
-
       filteredOffers.push(offer);
     }
-    if (filteredOffers.length >= ADS_COUNT) {
-      break;
-    }
-  }
+
+    return filteredOffers.length === ADS_COUNT;
+  });
+
   return filteredOffers;
 };
