@@ -1,3 +1,4 @@
+export const ADS_COUNT = 10;
 const priceValues = {
   'low': [0, 10000],
   'middle': [10000, 50000],
@@ -52,7 +53,7 @@ const checkOnFeatures = (adFeatures = [], filtersFeatures = []) =>{
 };
 
 //Функция, которая фильтрует объявления по всем фильтрам
-export const checkAdOnFilters = (ad, filters) => {
+const checkAdOnFilters = (ad, filters) => {
   const typeCheck = checkOnType(ad.offer.type, filters.type);
 
   const priceCheck = checkOnPrice(ad.offer.price, filters.price);
@@ -68,4 +69,18 @@ export const checkAdOnFilters = (ad, filters) => {
     roomsCheck &&
     guestsCheck &&
     featuresCheck;
+};
+
+export const getFilteredOffers = (offers, filters) => {
+  const filteredOffers = [];
+
+  offers.some((offer) => {
+    if (checkAdOnFilters(offer, filters)) {
+      filteredOffers.push(offer);
+    }
+
+    return filteredOffers.length === ADS_COUNT;
+  });
+
+  return filteredOffers;
 };
