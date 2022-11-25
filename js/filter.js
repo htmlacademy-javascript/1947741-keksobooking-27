@@ -70,21 +70,6 @@ const checkAdOnFilters = (ad, filters) => {
     guestsCheck &&
     featuresCheck;
 };
-// export const getFilteredOffers = (offers, filters) => {
-//   const filteredOffers = [];
-
-//   for (let i = 0; i < offers.length; i++) {
-//     const offer = offers[i];
-//     if (checkAdOnFilters(offer, filters)) {
-
-//       filteredOffers.push(offer);
-//     }
-//     if (filteredOffers.length >= ADS_COUNT) {
-//       break;
-//     }
-//   }
-//   return filteredOffers;
-// };
 
 export const getFilteredOffers = (offers, filters) => {
   const filteredOffers = [];
